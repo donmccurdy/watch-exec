@@ -1,0 +1,26 @@
+{
+  "name": "proc-watch",
+  "version": "1.0.0",
+  "description": "Runs a specified command when any files in the target directory change.",
+  "author": "Don McCurdy <dm@donmccurdy.com>",
+  "license": "MIT",
+  "keywords": [
+    "watch",
+    "watchfile",
+    "task",
+    "tool",
+    "cli"
+  ],
+  "main": "prox-watch.js",
+  "bin": {
+    "proc-watch": "proc-watch.js"
+  },
+  "preferGlobal": "true",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "commander": "^2.8.1",
+    "lodash": "^3.10.1",
+    "node-watch": "^0.3.4",
+    "pkginfo": "^0.3.0"
+  }
+}
