@@ -5,7 +5,7 @@ Run a specified command when any files in the target directory change.
 ## Installation
 
 ```
-$ npm install -g .
+$ npm install -g watch-exec
 ```
 
 ## Usage
