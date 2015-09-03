@@ -11,7 +11,7 @@
     "tool",
     "cli"
   ],
-  "main": "prox-watch.js",
+  "main": "proc-watch.js",
   "bin": {
     "proc-watch": "proc-watch.js"
   },
