@@ -1,8 +1,12 @@
 {
-  "name": "proc-watch",
+  "name": "watch-exec",
   "version": "1.0.0",
-  "description": "Runs a specified command when any files in the target directory change.",
-  "author": "Don McCurdy <dm@donmccurdy.com>",
+  "description": "Run a specified command when any files in the target directory change.",
+  "author": "Don McCurdy <dm@donmccurdy.com> (donmccurdy.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donmccurdy/watch-exec.git"
+  },
   "license": "MIT",
   "keywords": [
     "watch",
@@ -11,9 +15,9 @@
     "tool",
     "cli"
   ],
-  "main": "proc-watch.js",
+  "main": "watch-exec.js",
   "bin": {
-    "proc-watch": "proc-watch.js"
+    "watch-exec": "watch-exec.js"
   },
   "preferGlobal": "true",
   "dependencies": {
