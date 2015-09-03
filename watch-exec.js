@@ -26,7 +26,7 @@ var start = function () {
 	child.stderr.pipe(process.stderr);
 	child.on('close', function (code, signal) {
 		if (code !== 8) {
-			console.log(chalk.bgRed(' Process has died. Waiting for changes to restart. '));
+			console.log(chalk.black.bgRed(' Process has died. Waiting for changes to restart. '));
 		}
 	});
 }
