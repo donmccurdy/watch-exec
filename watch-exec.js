@@ -12,11 +12,11 @@ var exec = child_process.exec,
 // Configure CLI parameters.
 require('pkginfo')(module);
 program
-  .version(module.exports.version)
-  .description(module.exports.description)
-  .option('-c, --command [cmd]', 'command to run, and to restart when files change')
-  .option('-w, --watch [path]', 'directory or file to watch for changes')
-  .parse(process.argv);
+	.version(module.exports.version)
+	.description(module.exports.description)
+	.option('-c, --command [cmd]', 'command to run, and to restart when files change')
+	.option('-w, --watch [path]', 'directory or file to watch for changes')
+	.parse(process.argv);
 
 // Start process and listen for shutdown event.
 var child;
@@ -35,7 +35,7 @@ var start = function () {
 watch(program.watch, _.debounce(function(path) {
 	console.log(chalk.green(' → Change detected on "%s". Restarting process.'), path);
 	child.kill();
-  start();
+	start();
 }, 1000));
 
 // Initialize.
