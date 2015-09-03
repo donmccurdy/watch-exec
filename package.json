@@ -1,6 +1,6 @@
 {
   "name": "watch-exec",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Run a specified command when any files in the target directory change.",
   "author": "Don McCurdy <dm@donmccurdy.com> (donmccurdy.com)",
   "repository": {
