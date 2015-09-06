@@ -1,22 +1,24 @@
 #!/usr/bin/env node
 
-var child_process = require('child_process'),
+var exec = require('child_process').exec,
 	program = require('commander'),
 	watch = require('node-watch'),
 	chalk = require('chalk'),
 	_ = require('lodash');
-
-var exec = child_process.exec,
-	spawn = child_process.spawn;
 
 // Configure CLI parameters.
 require('pkginfo')(module);
 program
 	.version(module.exports.version)
 	.description(module.exports.description)
+	.usage('--command [command] --watch [path]')
 	.option('-c, --command [cmd]', 'command to run, and to restart when files change')
 	.option('-w, --watch [path]', 'directory or file to watch for changes')
 	.parse(process.argv);
+
+if (!program.command || !program.watch) {
+	program.help();
+}
 
 // Start process and listen for shutdown event.
 var child;
@@ -29,7 +31,7 @@ var start = function () {
 			console.log(chalk.black.bgRed(' Process has died. Waiting for changes to restart. '));
 		}
 	});
-}
+};
 
 // Listen for file changes and, when they occur, restart process.
 watch(program.watch, _.debounce(function(path) {
