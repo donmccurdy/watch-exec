@@ -26,8 +26,8 @@ var start = function () {
 	child = exec(program.command);
 	child.stdout.pipe(process.stdout);
 	child.stderr.pipe(process.stderr);
-	child.on('close', function (code, signal) {
-		if (code !== 8) {
+	child.on('close', function (code) {
+		if ( ! _.contains([0, 8], code)) {
 			console.log(chalk.black.bgRed(' Process has died. Waiting for changes to restart. '));
 		}
 	});
