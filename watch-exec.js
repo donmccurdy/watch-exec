@@ -4,6 +4,7 @@ var exec = require('child_process').exec,
 	program = require('commander'),
 	watch = require('node-watch'),
 	chalk = require('chalk'),
+	notify = require('growl'),
 	_ = require('lodash');
 
 // Configure CLI parameters.
@@ -14,6 +15,7 @@ program
 	.usage('--command [command] --watch [path]')
 	.option('-c, --command [cmd]', 'command to run, and to restart when files change')
 	.option('-w, --watch [path]', 'directory or file to watch for changes')
+	.option('-n, --notify []', 'enable desktop notification ("npm home growl" for more information)')
 	.parse(process.argv);
 
 if (!program.command || !program.watch) {
@@ -29,6 +31,21 @@ var start = function () {
 	child.stdout.pipe(process.stdout);
 	child.stderr.pipe(process.stderr);
 	child.on('close', function (code) {
+		if (program.notify) {
+			if (code === 0) {
+				notify("Process successfully terminated", {
+					name: "watch-exec",
+					title: "Success",
+					image: __dirname + "/notif-icons/ok.png"
+				});
+			} else {
+				notify("Process died (check console output for more details)", {
+					name: "watch-exec",
+					title: "Failure",
+					image: __dirname + "/notif-icons/error.png"
+				});
+			}
+		}
 		if ( ! _.contains([0, 8], code)) {
 			console.log(chalk.black.bgRed('%s process has died – waiting for changes to restart.'), prefix);
 		}
