@@ -23,6 +23,7 @@
   "dependencies": {
     "chalk": "^1.1.1",
     "commander": "^2.8.1",
+    "growl": "^1.8.1",
     "lodash": "^3.10.1",
     "node-watch": "^0.3.4",
     "pkginfo": "^0.3.0"
