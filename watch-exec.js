@@ -7,6 +7,12 @@ var exec = require('child_process').exec,
 	notify = require('growl'),
 	_ = require('lodash');
 
+var MESSAGES = {
+	0: 'Process completed.',
+	8: 'Process restarting.',
+	general: 'Process died.'
+};
+
 // Configure CLI parameters.
 require('pkginfo')(module);
 program
@@ -15,7 +21,7 @@ program
 	.usage('--command [command] --watch [path]')
 	.option('-c, --command [cmd]', 'command to run, and to restart when files change')
 	.option('-w, --watch [path]', 'directory or file to watch for changes')
-	.option('-n, --notify []', 'enable desktop notification ("npm home growl" for more information)')
+	.option('-n, --notify', 'show desktop notifications')
 	.parse(process.argv);
 
 if (!program.command || !program.watch) {
@@ -32,19 +38,11 @@ var start = function () {
 	child.stderr.pipe(process.stderr);
 	child.on('close', function (code) {
 		if (program.notify) {
-			if (code === 0) {
-				notify("Process successfully terminated", {
-					name: "watch-exec",
-					title: "Success",
-					image: __dirname + "/notif-icons/ok.png"
-				});
-			} else {
-				notify("Process died (check console output for more details)", {
-					name: "watch-exec",
-					title: "Failure",
-					image: __dirname + "/notif-icons/error.png"
-				});
-			}
+			notify(MESSAGES[code] || MESSAGES.general, {
+				name: module.exports.name,
+				title: code ? 'Failure' : 'Success',
+				image: __dirname + '/icons/' + (code ? 'error.png' : 'ok.png')
+			});
 		}
 		if ( ! _.contains([0, 8], code)) {
 			console.log(chalk.black.bgRed('%s process has died – waiting for changes to restart.'), prefix);
@@ -57,7 +55,7 @@ watch(program.watch, _.debounce(function(path) {
 	console.log(chalk.green('%s change detected on "%s". restarting process.'), prefix, path);
 	child.kill();
 	start();
-}, 1000));
+}, 1000, {leading: true, trailing: false}));
 
 // Initialize.
 console.log(chalk.yellow('%s v%s'), prefix, module.exports.version);
