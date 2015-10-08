@@ -26,7 +26,8 @@
     "growl": "^1.8.1",
     "lodash": "^3.10.1",
     "node-watch": "^0.3.4",
-    "pkginfo": "^0.3.0"
+    "pkginfo": "^0.3.0",
+    "stdin": "0.0.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

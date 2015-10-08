@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var exec = require('child_process').exec,
+	tty = require('tty'),
 	program = require('commander'),
 	watch = require('node-watch'),
 	chalk = require('chalk'),
@@ -45,7 +46,7 @@ var start = function () {
 			});
 		}
 		if ( ! _.contains([0, 8], code)) {
-			console.log(chalk.black.bgRed('%s process has died – waiting for changes to restart.'), prefix);
+			console.log(chalk.black.bgRed('%s process has died – make a change or press "r" to restart.'), prefix);
 		}
 	});
 };
@@ -56,6 +57,12 @@ watch(program.watch, _.debounce(function(path) {
 	child.kill();
 	start();
 }, 1000, {leading: true, trailing: false}));
+
+// Listen for restart keypress, "r".
+var stdin = require('stdin');
+stdin(function(input) {
+	console.log('STDIN: ' + input);
+});
 
 // Initialize.
 console.log(chalk.yellow('%s v%s'), prefix, module.exports.version);
