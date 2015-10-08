@@ -26,7 +26,7 @@ program
 	.option('-n, --notify', 'show desktop notifications')
 	.parse(process.argv);
 
-if (!program.command || !program.watch) {
+if (!program.command || !program.watch.length) {
 	program.help();
 }
 
