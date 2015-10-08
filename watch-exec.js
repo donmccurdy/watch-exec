@@ -3,9 +3,10 @@
 var exec = require('child_process').exec,
 	program = require('commander'),
 	watch = require('node-watch'),
-	chalk = require('chalk'),
 	notify = require('growl'),
 	_ = require('lodash');
+
+var util = require('./util');
 
 var MESSAGES = {
 	0: 'Process completed.',
@@ -18,17 +19,16 @@ require('pkginfo')(module);
 program
 	.version(module.exports.version)
 	.description(module.exports.description)
-	.usage('--command [command] --watch [path]')
-	.option('-c, --command [cmd]', 'command to run, and to restart when files change')
-	.option('-w, --watch [path]', 'directory or file to watch for changes')
+	.usage('--command <command> --watch [path]')
+	.option('-c, --command <command>', 'command to run, and to restart when files change')
+	.option('-w, --watch [path]', 'directories or files to watch for changes', util.collect, [])
+	.option('-e, --exclude [path]', 'directories or files to exclude', util.collect, [])
 	.option('-n, --notify', 'show desktop notifications')
 	.parse(process.argv);
 
 if (!program.command || !program.watch) {
 	program.help();
 }
-
-var prefix = '[' + module.exports.name + ']';
 
 // Start process and listen for shutdown event.
 var child;
@@ -45,20 +45,35 @@ var start = function () {
 			});
 		}
 		if ( ! _.contains([0, 8], code)) {
-			console.log(chalk.black.bgRed('%s process has died – waiting for changes to restart.'), prefix);
+			util.log.warn('process has died – waiting for changes to restart.');
 		}
 	});
 };
 
-// Listen for file changes and, when they occur, restart process.
-watch(program.watch, _.debounce(function(path) {
-	console.log(chalk.green('%s change detected on "%s". restarting process.'), prefix, path);
+var restart = _.debounce(function() {
+	util.log.success('restarting process.');
 	child.kill();
 	start();
-}, 1000, {leading: true, trailing: false}));
+}, 1000, {leading: true, trailing: false});
+
+// Listen for file changes and, when they occur, restart process.
+watch(program.watch, function(path) {
+	var isExcluded = _.some(program.exclude, function(exclude) {
+		return path.search(exclude) >= 0;
+	});
+	if (!isExcluded) {
+		util.log.info('change detected on "%s".', path);
+		restart();
+	}
+});
+
+// Log configuration.
+util.log.info('v%s', module.exports.version);
+util.log.info('watching: %s', program.watch.join(', '));
+if (program.exclude.length) {
+	util.log.info('excluding: %s', program.exclude.join(', '));
+}
 
 // Initialize.
-console.log(chalk.yellow('%s v%s'), prefix, module.exports.version);
-console.log(chalk.yellow('%s watching: %s'), prefix, program.watch);
-console.log(chalk.green('%s starting: %s'), prefix, program.command);
+util.log.success('starting: %s', program.command);
 start();
